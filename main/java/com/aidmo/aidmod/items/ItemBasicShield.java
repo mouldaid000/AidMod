@@ -1,8 +1,5 @@
 package com.aidmo.aidmod.items;
 
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,31 +15,30 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemBasicSword extends AidItem{
+/**
+ * Created by mouldaid000 on 5/4/2017.
+ */
+public class ItemBasicShield extends AidItem{
 
-    public ItemBasicSword(){
+    public ItemBasicShield(){
 
-        super("basicsword");
+        super("basicshield");
         this.setFull3D();
         this.setMaxStackSize(1);
-        this.setMaxDamage(16);
 
     }
-
     public void setupTag(ItemStack stack){
 
         stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setDouble("strength",0);
-        stack.getTagCompound().setDouble("maxstrength",100);
-        stack.getTagCompound().setDouble("strengthpersecond", 2);
-        stack.getTagCompound().setString("newsword", "none");
-        stack.getTagCompound().setLong("strengthtime", System.currentTimeMillis());
-    }
+        stack.getTagCompound().setDouble("defense",0);
+        stack.getTagCompound().setDouble("maxdefense",75);
+        stack.getTagCompound().setString("newshield", "none");
 
+    }
     @Override @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
         tooltip.clear();
-        tooltip.add("A basic sword.");
+        tooltip.add("A basic shield.");
         if(!stack.hasTagCompound()){
             setupTag(stack);
         }
@@ -55,13 +51,19 @@ public class ItemBasicSword extends AidItem{
         }
     }
     @Override
-    public boolean onEntitySwing(EntityLivingBase ent, ItemStack stack){
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand){
+        if(player.getHeldItem(hand).hasTagCompound()){
+            if(player.getHeldItem(hand).getTagCompound().hasKey("defense")){
+                double defense = player.getHeldItem(hand).getTagCompound().getDouble("defense");
+                String message = "";
 
-        if(!stack.hasTagCompound()){
-            setupTag(stack);
+                player.sendStatusMessage(new TextComponentString(message), true);
+            }
+            else {
+                setupTag(player.getHeldItem(hand));
+            }
         }
-
-        return false;
+        return new ActionResult<ItemStack>((EnumActionResult.PASS), player.getHeldItem(hand));
     }
 
 }

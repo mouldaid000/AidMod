@@ -24,6 +24,7 @@ public class EventHandler {
    @SubscribeEvent
     public static void registerModels(ModelRegistryEvent e){
         setModel(AidItems.basicsword);
+        setModel(AidItems.basicshield);
    }
 
    public static void registerRecipes(){
